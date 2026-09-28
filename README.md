@@ -7,7 +7,7 @@
 
 **Versão:** 1.2.5 — Beta Integration Center
 
-Journal de operações e análise de performance com arquitetura multiusuário, aprovação administrativa e sincronização planejada com Exness via MetaTrader 5.
+Painel de operações e análise de performance com arquitetura multiusuário, aprovação administrativa e sincronização planejada com Exness via MetaTrader 5.
 
 ## Foco atual
 
