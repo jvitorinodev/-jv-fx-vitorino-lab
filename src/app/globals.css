@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --bg: 248 250 252;
+  --surface: 255 255 255;
+  --surface-elevated: 255 255 255;
+  --surface-hover: 248 250 252;
+  --border: 226 232 240;
+  --border-strong: 203 213 225;
+  --text: 15 23 42;
+  --text-secondary: 71 85 105;
+  --text-muted: 148 163 184;
+  --positive: 5 150 105;
+  --negative: 220 38 38;
+  --warning: 217 119 6;
+  --information: 37 99 235;
+}
+
+* { box-sizing: border-box; }
+html { background: rgb(var(--bg)); }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select, textarea { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid rgb(var(--information));
+  outline-offset: 2px;
+}
+
+::selection { background: rgba(37, 99, 235, .14); }
+
+@layer components {
+  .panel {
+    @apply rounded-xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.03),0_8px_28px_rgba(15,23,42,0.035)];
+  }
+  .panel-header {
+    @apply flex items-center justify-between border-b border-slate-100 px-4 py-3;
+  }
+  .eyebrow {
+    @apply text-[9px] font-semibold uppercase tracking-[0.14em] text-slate-400;
+  }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .action {
+    @apply inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11px] text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+}
+
+/* Camada de compatibilidade visual para componentes legados ainda utilizados. */
+.app-light .text-slate-100,
+.app-light .text-slate-200 { color: rgb(15 23 42); }
+.app-light .text-slate-300 { color: rgb(51 65 85); }
+.app-light .text-slate-400 { color: rgb(71 85 105); }
+.app-light .text-slate-500 { color: rgb(100 116 139); }
+.app-light .text-slate-600 { color: rgb(148 163 184); }
+.app-light .text-slate-700 { color: rgb(71 85 105); }
+.app-light .border-slate-700,
+.app-light .border-slate-800,
+.app-light .border-slate-900 { border-color: rgb(226 232 240); }
+.app-light .bg-slate-950 { background-color: rgb(255 255 255); }
+.app-light .bg-slate-900 { background-color: rgb(248 250 252); }
+.app-light .bg-slate-800 { background-color: rgb(241 245 249); }
+.app-light .bg-slate-950\/40,
+.app-light .bg-slate-950\/35,
+.app-light .bg-slate-950\/30,
+.app-light .bg-slate-950\/45,
+.app-light .bg-slate-950\/50,
+.app-light .bg-slate-950\/55,
+.app-light .bg-slate-950\/80 { background-color: rgba(248, 250, 252, .8); }
+.app-light .bg-slate-900\/35,
+.app-light .bg-slate-900\/45 { background-color: rgb(248 250 252); }
+.app-light .hover\:bg-slate-900:hover,
+.app-light .hover\:bg-slate-900\/35:hover,
+.app-light .hover\:bg-slate-900\/45:hover { background-color: rgb(248 250 252); }
+.app-light .text-emerald-300 { color: rgb(5 150 105); }
+.app-light .text-red-300 { color: rgb(220 38 38); }
+.app-light .text-sky-300 { color: rgb(37 99 235); }
+.app-light .text-sky-200 { color: rgb(29 78 216); }
+
+* { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+.app-light .bg-slate-800\/60 { background-color: rgb(241 245 249); }
+.app-light .bg-black\/15 { background-color: rgb(248 250 252); }
+.app-light .hover\:text-white:hover { color: rgb(15 23 42); }
+
+
+
+.app-dark {
+  color-scheme: dark;
+  color: rgb(241 245 249);
+  --text: 241 245 249;
+  --text-secondary: 203 213 225;
+  --text-muted: 148 163 184;
+}
+
+/* Tema escuro: usamos seletores por atributo para não redefinir utilitários do
+   Tailwind (.bg-slate-900, .border-slate-200 etc.) e evitar dependência circular
+   durante o processamento de @apply. */
+.app-dark .panel {
+  border-color: rgb(51 65 85);
+  background-color: rgb(15 23 42);
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.4), 0 10px 30px rgba(2, 6, 23, 0.35);
+}
+.app-dark .panel-header { border-color: rgb(30 41 59); }
+
+.app-dark [class~="bg-white"] { background-color: rgb(15 23 42) !important; }
+.app-dark [class~="bg-slate-50"] { background-color: rgb(2 6 23) !important; }
+.app-dark [class~="bg-slate-100"] { background-color: rgb(30 41 59) !important; }
+.app-dark [class~="bg-slate-800"] { background-color: rgb(30 41 59) !important; }
+.app-dark [class~="bg-slate-900"] { background-color: rgb(15 23 42) !important; }
+.app-dark [class~="bg-slate-950"] { background-color: rgb(2 6 23) !important; }
+.app-dark [class~="bg-slate-950/25"] { background-color: rgba(2, 6, 23, 0.65) !important; }
+.app-dark [class~="bg-slate-100/80"],
+.app-dark [class~="bg-white/95"] { background-color: rgba(15, 23, 42, 0.92) !important; }
+
+.app-dark [class~="border-slate-100"] { border-color: rgb(30 41 59) !important; }
+.app-dark [class~="border-slate-200"] { border-color: rgb(51 65 85) !important; }
+.app-dark [class~="border-slate-300"] { border-color: rgb(71 85 105) !important; }
+
+.app-dark [class~="text-slate-950"],
+.app-dark [class~="text-slate-900"] { color: rgb(241 245 249) !important; }
+.app-dark [class~="text-slate-800"],
+.app-dark [class~="text-slate-700"] { color: rgb(226 232 240) !important; }
+.app-dark [class~="text-slate-600"] { color: rgb(203 213 225) !important; }
+.app-dark [class~="text-slate-500"],
+.app-dark [class~="text-slate-400"] { color: rgb(148 163 184) !important; }
+.app-dark [class~="text-white"] { color: rgb(241 245 249) !important; }
+
+.app-dark [class~="hover:bg-slate-50"]:hover,
+.app-dark [class~="hover:bg-slate-100"]:hover,
+.app-dark [class~="hover:bg-slate-800"]:hover { background-color: rgb(30 41 59) !important; }
+.app-dark [class~="hover:bg-slate-900"]:hover { background-color: rgb(51 65 85) !important; }
+.app-dark [class~="hover:text-slate-900"]:hover,
+.app-dark [class~="hover:text-slate-950"]:hover { color: rgb(241 245 249) !important; }
+.app-dark .group:hover [class~="group-hover:text-slate-700"] { color: rgb(241 245 249) !important; }
+
+.app-dark [class~="text-red-600"] { color: rgb(252 165 165) !important; }
+.app-dark [class~="hover:bg-red-50"]:hover { background-color: rgba(127, 29, 29, 0.35) !important; }
+.app-dark [class~="bg-emerald-50"] { background-color: rgba(6, 95, 70, 0.28) !important; }
+.app-dark [class~="text-emerald-700"] { color: rgb(110 231 183) !important; }
+.app-dark [class~="text-blue-700"] { color: rgb(147 197 253) !important; }
+.app-dark [class~="text-red-700"] { color: rgb(252 165 165) !important; }
+.app-dark [class~="text-amber-700"] { color: rgb(253 230 138) !important; }
+.app-dark [class~="text-violet-700"] { color: rgb(196 181 253) !important; }
+.app-dark [class~="bg-blue-50"] { background-color: rgba(30, 64, 175, 0.22) !important; }
+.app-dark [class~="bg-red-50"] { background-color: rgba(127, 29, 29, 0.22) !important; }
+.app-dark [class~="bg-amber-50"] { background-color: rgba(120, 53, 15, 0.22) !important; }
+.app-dark [class~="bg-violet-50"] { background-color: rgba(76, 29, 149, 0.22) !important; }
+
+.app-dark [class~="shadow-xl"],
+.app-dark [class~="shadow-sm"] { box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35) !important; }
+
+
+/* Correções de contraste do tema escuro: elementos sem utilitário de texto
+   passam a herdar uma cor clara e legível. */
+.app-dark input,
+.app-dark select,
+.app-dark textarea,
+.app-dark button {
+  color: inherit;
+}
+.app-dark input::placeholder,
+.app-dark textarea::placeholder {
+  color: rgb(100 116 139);
+}
+
+/* Cards de últimos resultados permanecem claros mesmo no modo escuro. */
+.app-dark .recent-result-card {
+  background: rgb(248 250 252) !important;
+  border-color: rgb(226 232 240) !important;
+  color: rgb(15 23 42) !important;
+}
+.app-dark .recent-result-card .recent-result-title { color: rgb(15 23 42) !important; }
+.app-dark .recent-result-card .recent-result-note { color: rgb(100 116 139) !important; }
+.app-dark .recent-result-card .recent-result-positive { color: rgb(5 150 105) !important; }
+.app-dark .recent-result-card .recent-result-negative { color: rgb(220 38 38) !important; }
+
+
+/* Cards de Qualidade do histórico permanecem claros no modo escuro,
+   com a cor aplicada somente ao conteúdo (positivo/negativo/neutro). */
+.app-dark .history-quality-card {
+  background: rgb(248 250 252) !important;
+  border-color: rgb(226 232 240) !important;
+  color: rgb(15 23 42) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+}
+.app-dark .history-quality-card .history-quality-positive { color: rgb(5 150 105) !important; }
+.app-dark .history-quality-card .history-quality-negative { color: rgb(220 38 38) !important; }
+.app-dark .history-quality-card .history-quality-neutral { color: rgb(71 85 105) !important; }

@@ -1,0 +1,37 @@
+import type { LiquidityMap, MovingAverageContext, PriceActionContext, PriceActionSignal, MarketPhase, VolumeContext, VolumeMode, VwapPosition } from "@/lib/types/market-analysis";
+
+const fieldClass = "mt-1.5 h-9 w-full rounded-lg border border-slate-800 bg-slate-950 px-2.5 text-xs text-slate-200 outline-none focus:border-sky-500";
+const areaClass = "mt-1.5 min-h-20 w-full resize-y rounded-lg border border-slate-800 bg-slate-950 px-2.5 py-2 text-xs text-slate-200 outline-none focus:border-sky-500";
+
+const liquidityLabels: Array<[keyof LiquidityMap, string]> = [
+  ["previousDayHigh", "Máxima do dia anterior (PDH)"], ["previousDayLow", "Mínima do dia anterior (PDL)"],
+  ["previousWeekHigh", "Máxima da semana anterior (PWH)"], ["previousWeekLow", "Mínima da semana anterior (PWL)"],
+  ["asiaHigh", "Máxima da Ásia"], ["asiaLow", "Mínima da Ásia"], ["buySideLiquidity", "Buy Side Liquidity (BSL)"],
+  ["sellSideLiquidity", "Sell Side Liquidity (SSL)"], ["internalLiquidity", "Liquidez interna"], ["externalLiquidity", "Liquidez externa"],
+];
+
+function Toggle({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className={`flex items-center justify-between gap-2 rounded-lg border px-3 py-2.5 text-left text-[11px] transition ${active ? "border-sky-400/25 bg-sky-400/[0.05] text-sky-100" : "border-slate-800 bg-slate-950/30 text-slate-500 hover:border-slate-700"}`}><span>{label}</span><span className={`size-2 rounded-full ${active ? "bg-sky-300" : "bg-slate-700"}`} /></button>;
+}
+
+function TriSelect({ value, onChange }: { value: boolean | null; onChange: (value: boolean | null) => void }) {
+  return <select className={fieldClass} value={value == null ? "null" : value ? "true" : "false"} onChange={(e) => onChange(e.target.value === "null" ? null : e.target.value === "true")}><option value="null">Não avaliado</option><option value="true">Sim</option><option value="false">Não</option></select>;
+}
+
+export function LiquidityPanel({ value, onChange }: { value: LiquidityMap; onChange: (value: LiquidityMap) => void }) {
+  return <section className="panel overflow-hidden"><div className="panel-header"><div><p className="eyebrow">Mapa de liquidez</p><h2 className="mt-1 text-sm font-semibold">Níveis e pools observados</h2></div></div><div className="grid gap-2 p-4 sm:grid-cols-2">{liquidityLabels.map(([key, label]) => <Toggle key={key} active={value[key]} label={label} onClick={() => onChange({ ...value, [key]: !value[key] })} />)}</div></section>;
+}
+
+export function VolumePanel({ value, onChange }: { value: VolumeContext; onChange: (value: VolumeContext) => void }) {
+  return <section className="panel overflow-hidden"><div className="panel-header"><div><p className="eyebrow">Preço + volume</p><h2 className="mt-1 text-sm font-semibold">Contexto de Volume</h2></div></div><div className="space-y-3 p-4"><div className="grid gap-3 sm:grid-cols-2"><label className="text-[11px] text-slate-500">Fonte / modo<select className={fieldClass} value={value.mode} onChange={(e) => onChange({ ...value, mode: e.target.value as VolumeMode })}><option value="TICK">Volume de ticks</option><option value="BROKER">Volume da corretora</option><option value="CENTRALIZED">Volume centralizado</option><option value="UNAVAILABLE">Indisponível</option></select></label><label className="text-[11px] text-slate-500">Volume relativo (%)<input className={fieldClass} type="number" min="0" step="1" value={value.relativeVolumePct ?? ""} onChange={(e) => onChange({ ...value, relativeVolumePct: e.target.value === "" ? null : Number(e.target.value) })} /></label><label className="text-[11px] text-slate-500 sm:col-span-2">Preço versus VWAP<select className={fieldClass} value={value.vwapPosition} onChange={(e) => onChange({ ...value, vwapPosition: e.target.value as VwapPosition })}><option value="ABOVE">Acima da VWAP</option><option value="BELOW">Abaixo da VWAP</option><option value="AT">Na VWAP</option><option value="UNAVAILABLE">Indisponível</option></select></label></div><label className="text-[11px] text-slate-500">Observação<textarea className={areaClass} value={value.note} onChange={(e) => onChange({ ...value, note: e.target.value })} /></label><p className="text-[10px] leading-4 text-slate-600">Forex spot não possui volume centralizado. Quando a origem for broker/MT5, trate o dado como volume de ticks, salvo indicação explícita da fonte.</p></div></section>;
+}
+
+export function MovingAveragePanel({ value, onChange }: { value: MovingAverageContext; onChange: (value: MovingAverageContext) => void }) {
+  return <section className="panel overflow-hidden"><div className="panel-header"><div><p className="eyebrow">Médias móveis</p><h2 className="mt-1 text-sm font-semibold">Contexto EMA</h2></div></div><div className="space-y-3 p-4"><div className="grid gap-3 sm:grid-cols-3"><label className="text-[11px] text-slate-500">EMA 9 acima da EMA 20<TriSelect value={value.ema9Above20} onChange={(next) => onChange({ ...value, ema9Above20: next })} /></label><label className="text-[11px] text-slate-500">Preço acima da EMA 50<TriSelect value={value.priceAboveEma50} onChange={(next) => onChange({ ...value, priceAboveEma50: next })} /></label><label className="text-[11px] text-slate-500">Preço acima da EMA 200<TriSelect value={value.priceAboveEma200} onChange={(next) => onChange({ ...value, priceAboveEma200: next })} /></label></div><label className="text-[11px] text-slate-500">Observação<textarea className={areaClass} value={value.note} onChange={(e) => onChange({ ...value, note: e.target.value })} /></label></div></section>;
+}
+
+export function PriceActionPanel({ value, onChange }: { value: PriceActionContext; onChange: (value: PriceActionContext) => void }) {
+  const signals: Array<[PriceActionSignal, string]> = [["NONE","Sem sinal"],["ENGULFING","Engolfo"],["PIN_BAR","Pin Bar"],["INSIDE_BAR","Inside Bar"],["BREAKOUT","Rompimento"],["RETEST","Reteste"],["REJECTION","Rejeição"],["STRONG_CLOSE","Fechamento forte"],["FAILED_BREAKOUT","Falso rompimento"]];
+  const phases: Array<[MarketPhase, string]> = [["TREND","Tendência"],["RANGE","Lateralização"],["EXPANSION","Expansão"],["CONSOLIDATION","Consolidação"],["TRANSITION","Transição"]];
+  return <section className="panel overflow-hidden"><div className="panel-header"><div><p className="eyebrow">Ação do preço</p><h2 className="mt-1 text-sm font-semibold">Confirmação discricionária</h2></div></div><div className="space-y-3 p-4"><div className="grid gap-3 sm:grid-cols-2"><label className="text-[11px] text-slate-500">Fase de mercado<select className={fieldClass} value={value.marketPhase} onChange={(e) => onChange({ ...value, marketPhase: e.target.value as MarketPhase })}>{phases.map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label><label className="text-[11px] text-slate-500">Sinal<select className={fieldClass} value={value.signal} onChange={(e) => onChange({ ...value, signal: e.target.value as PriceActionSignal })}>{signals.map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label></div><Toggle active={value.confirmed} label="Confirmação de Ação do Preço presente" onClick={() => onChange({ ...value, confirmed: !value.confirmed })} /><label className="text-[11px] text-slate-500">Observação<textarea className={areaClass} value={value.note} onChange={(e) => onChange({ ...value, note: e.target.value })} /></label></div></section>;
+}

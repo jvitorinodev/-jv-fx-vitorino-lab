@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "plugins": [],
+    "types": [],
+    "incremental": false
+  },
+  "include": [
+    "typecheck-stubs.d.ts",
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "middleware.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
